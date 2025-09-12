@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Lecturer = require('./lecturers.models')
+const Lecturer = require('./lecturer.models')
 
 facultySchema= new mongoose.Schema({
     name:{
@@ -11,12 +11,16 @@ facultySchema= new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref: 'Lecturer'
     },
-    establishedYear:{
-        type: Date().getFullYear(),
+    establishedDate:{
+        type: Date,
         required: true
     },
 },{ timestamps: true})
 
+facultySchema.virtual('establishedYear').get(function(){
+    return this.establishedDate.getFullYear();
 
+})
+facultySchema.set('toJson',{virtual:true})
 
 module.exports = mongoose.model('Faculty', facultySchema);

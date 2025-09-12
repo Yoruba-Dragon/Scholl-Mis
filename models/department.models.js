@@ -22,10 +22,16 @@ departmentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Lecturer'
     },
-    establishedYear: {
-        type: Date().getFullYear(),
+    establishedDate: {
+        type: Date,
         required: true
     }
 }, { timestamps: true });
+departmentSchema.virtual('establishedYear').get(function(){
+    return this.establishedDate.getFullYear();
+
+})
+departmentSchema.set('toJson',{virtual:true})
+
 
 module.exports = mongoose.model('Department', departmentSchema);

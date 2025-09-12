@@ -6,7 +6,7 @@ const Person = require('./person.models');
 const lecturerSchema = new mongoose.Schema({
     employeeId: {
         type: String,
-        required: true,
+        required: false,
         unique: true,
         trim: true
     },
@@ -23,7 +23,7 @@ const lecturerSchema = new mongoose.Schema({
     hireDate: {
         type: Date,
         required: true,
-        default: Date.now()
+        default: Date.now
     },
     rank:{
         type: String,

@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 
 const generateToken = (user) => {
     return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-        expiresIn: '1d'
+        expiresIn: '1h'
     });
 };
 
@@ -24,7 +24,7 @@ const generateToken = (user) => {
         }
         console.log("DB hash:", isUser.password);
     console.log("Entered password:", password);
-        const isValid =  await bcrypt.compareSync(password, isUser.password)
+        const isValid =  await bcrypt.compare(password, isUser.password)
         console.log("Password match:", isValid)
         if (!isValid){
             return res.status(400).json({message: 'invalid credentials'})
@@ -33,11 +33,19 @@ const generateToken = (user) => {
         isUser.lastLogin = Date.now()
         await isUser.save()
         res.status(200).cookie(
-            'token', token, 
+            'token', token,
+            
             { httpOnly: true,
             sameSite:'strict',
             maxAge: 24 * 60 * 60 * 1000 // 1 day
-            }).json({ message: 'Login successful', token})
+            }).json({ message: 'Login successful', token,
+                user:{
+                    id: isUser._id,
+                    username: isUser.username,
+                    role:isUser.role
+
+                }
+            })
             console.log("Found user:", isUser);
 console.log("DB password:", isUser?.password);
 console.log("Entered password:", password);
@@ -72,11 +80,17 @@ console.log("Entered password:", password);
             { httpOnly: true ,
             sameSite:'strict',
             maxAge: 24 * 60 * 60 * 1000 })// 1 day
-        .json({ message: 'Registration successful', token})
+        .json({ message: 'Registration successful', token,
+            user:{
+                    id: newUser._id,
+                    username: newUser.username,
+                    role:newUser.role
+
+                }
+
+        })
         console.log("Login attempt:", username);
-console.log("Found user:", isUser);
-console.log("DB password:", isUser?.password);
-console.log("Entered password:", password);
+
     }catch (err){
         res.status(500).json({message: 'Server error' + err.message})
     }

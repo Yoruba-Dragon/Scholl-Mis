@@ -1,7 +1,9 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const authRoutes = require('./routers/auth.routes')
-
+const profileRoutes= require('./routers/person.routes')
+const cookieParser= require('cookie-parser')
+const bodyParser = require('body-parser');
 
 
 require('dotenv').config()
@@ -10,7 +12,12 @@ require('dotenv').config()
 const app =express()
 
 app.use(express.json())
+app.use(cookieParser())
+app.use(bodyParser.json());
+
+
 app.use('/api/auth', authRoutes)
+app.use('/api/profile', profileRoutes)
 
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,

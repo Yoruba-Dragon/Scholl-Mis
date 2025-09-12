@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 const Department = require('./department.models')
 const Faculty = require('./faculty.models')
 const Person = require('./person.models')
-
+const {generateStudentNumber} = require('../utils/id.utils')
 
 
 studentSchema = new mongoose.Schema ({
 
     studentNumber:{
         type: String,
-        required: true,
+        required: false,
         unique: true,
         trim: true
     },
@@ -31,10 +31,11 @@ studentSchema = new mongoose.Schema ({
     },
 
     graduationDate: Date,
+
     cgpa: {
     type: Number,
     min: 0,
-    max: 4.0
+    max: 5.0
 },
     status:{
         type: String,
@@ -46,12 +47,12 @@ studentSchema = new mongoose.Schema ({
     department:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Department',
-        required: true
+        required: false
     },
     faculty:{
        type: mongoose.Schema.Types.ObjectId,
        ref: 'Faculty',
-       required: true
+       required: false
     },
 
     accommodationType:{
@@ -59,6 +60,21 @@ studentSchema = new mongoose.Schema ({
         enum: ['on-campus', 'off-campus' ]}
     
     })
+
+studentSchema.pre('save', async function(next){
+    try{
+    if (this.isNew && ! this.studentNumber){
+        const enrollmentYear = this.enrollmentDate.getFullYear();
+        this.studentNumber = await generateStudentNumber(enrollmentYear);
+
+    }
+    next();
+    } catch (error){
+        next(error);
+    }
+    })
+
+
 
 studentSchema.index({ studentNumber: 1 });
 studentSchema.index({ level: 1 });

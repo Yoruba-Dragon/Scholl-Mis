@@ -59,12 +59,15 @@ const personSchema = new mongoose.Schema({
     type:{
         type: String,
         required: true,
-        enum: ['student', 'teacher']
+        enum: ['student', 'lecturer']
     }, 
     user:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        required: true,
+        unique: true
     }
 }, { timestamps: true ,
     discriminatorKey: 'type'
 })
+module.exports= mongoose.model('Person', personSchema)
