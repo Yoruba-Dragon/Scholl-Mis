@@ -1,7 +1,7 @@
 const mongoose= require('mongoose')
 const user = require('./users.models')
 
-personSchema = new mongoose.Schema({
+const personSchema = new mongoose.Schema({
     lastName:{
         type : String,
         required: true
