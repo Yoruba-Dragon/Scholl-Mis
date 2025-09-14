@@ -20,7 +20,8 @@ departmentSchema = new mongoose.Schema({
     },
     head: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Lecturer'
+        ref: 'Lecturer',
+        required: false
     },
     establishedDate: {
         type: Date,

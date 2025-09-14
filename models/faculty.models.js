@@ -8,8 +8,9 @@ facultySchema= new mongoose.Schema({
         trim: true
     },
     dean:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref: 'Lecturer'
+        type:String,
+        required: false,
+        
     },
     establishedDate:{
         type: Date,
